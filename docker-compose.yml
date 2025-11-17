@@ -1,0 +1,13 @@
+services:
+  web:
+    build: .
+    container_name: stock-visualizer-web
+    ports:
+      - "8080:5000"
+    environment:
+      - FLASK_APP=app.py
+      - FLASK_ENV=production
+      - ALPHA_VANTAGE_API_KEY=${ALPHA_VANTAGE_API_KEY}
+    volumes:
+      - .:/app
+    restart: unless-stopped
