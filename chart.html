@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block title %}{{ symbol }} Chart - Stock Data Visualizer{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h2>Stock Chart: {{ symbol }}</h2>
+</div>
+
+<div class="chart-info">
+    <div class="info-grid">
+        <div class="info-item">
+            <span class="info-label">Symbol:</span>
+            <span class="info-value">{{ symbol }}</span>
+        </div>
+        <div class="info-item">
+            <span class="info-label">Chart Type:</span>
+            <span class="info-value">{{ chart_type }}</span>
+        </div>
+        <div class="info-item">
+            <span class="info-label">Time Series:</span>
+            <span class="info-value">{{ time_series }}</span>
+        </div>
+        <div class="info-item">
+            <span class="info-label">Date Range:</span>
+            <span class="info-value">{{ start_date }} to {{ end_date }}</span>
+        </div>
+    </div>
+</div>
+
+<div class="chart-container">
+    {{ chart_svg|safe }}
+</div>
+
+<div class="action-buttons">
+    <a href="{{ url_for('index') }}" class="btn btn-secondary">View Another Stock</a>
+</div>
+{% endblock %}

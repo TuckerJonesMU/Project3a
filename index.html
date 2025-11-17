@@ -1,0 +1,94 @@
+{% extends "base.html" %} {% block title %}Stock Data Visualizer - Home{%
+endblock %} {% block content %}
+<div class="form-container">
+  <form method="POST" action="{{ url_for('index') }}" class="stock-form">
+    <div class="form-group">
+      <label for="symbol">Stock Symbol:</label>
+      <select name="symbol" id="symbol" required>
+        <option value="">-- Select a Stock Symbol --</option>
+        {% for symbol, name in stock_symbols %}
+        <option value="{{ symbol }}">{{ symbol }} - {{ name }}</option>
+        {% endfor %}
+      </select>
+      <small class="form-hint"
+        >Select from {{ stock_symbols|length }} available stocks</small
+      >
+    </div>
+
+    <div class="form-group">
+      <label for="chart_type">Chart Type:</label>
+      <select name="chart_type" id="chart_type" required>
+        <option value="line">Line Chart</option>
+        <option value="bar">Bar Chart</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="time_series">Time Series:</label>
+      <select name="time_series" id="time_series" required>
+        <option value="intraday">Intraday (Hourly)</option>
+        <option value="daily" selected>Daily</option>
+        <option value="weekly">Weekly</option>
+        <option value="monthly">Monthly</option>
+      </select>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="start_date">Start Date:</label>
+        <input type="date" name="start_date" id="start_date" required />
+      </div>
+
+      <div class="form-group">
+        <label for="end_date">End Date:</label>
+        <input type="date" name="end_date" id="end_date" required />
+      </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Generate Chart</button>
+  </form>
+</div>
+
+{% if chart_svg %}
+<!-- chart display section (shown below form after submission) -->
+<div class="chart-info">
+  <h3>Generated Chart</h3>
+  <div class="info-grid">
+    <div class="info-item">
+      <span class="info-label">Symbol:</span>
+      <span class="info-value">{{ chart_info.symbol }}</span>
+    </div>
+    <div class="info-item">
+      <span class="info-label">Chart Type:</span>
+      <span class="info-value">{{ chart_info.chart_type }}</span>
+    </div>
+    <div class="info-item">
+      <span class="info-label">Time Series:</span>
+      <span class="info-value">{{ chart_info.time_series }}</span>
+    </div>
+    <div class="info-item">
+      <span class="info-label">Date Range:</span>
+      <span class="info-value"
+        >{{ chart_info.start_date }} to {{ chart_info.end_date }}</span
+      >
+    </div>
+  </div>
+</div>
+
+<div class="chart-container">{{ chart_svg|safe }}</div>
+{% else %} {% endif %}
+
+<script>
+  // set default dates (last 30 days)
+  const endDate = new Date();
+  const startDate = new Date();
+  startDate.setDate(startDate.getDate() - 30);
+
+  document.getElementById("start_date").value = startDate
+    .toISOString()
+    .split("T")[0];
+  document.getElementById("end_date").value = endDate
+    .toISOString()
+    .split("T")[0];
+</script>
+{% endblock %}
